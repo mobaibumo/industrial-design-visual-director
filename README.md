@@ -44,7 +44,9 @@ py -3 scripts/director.py qa --dna outputs/demo-001/product-dna.json --result 'D
 该命令汇总证据，不自动观察图片；审查后同步 manifest 与修改记录。没有结果时不创建空 QA 报告。完整能力与测试记录见 DELIVERY.md。
 
 ## Git 与隐私
-许可证待选，当前保留全部权利，公开仓库不等于授予开源使用许可。提交前检查 `git status`、`git diff --cached`，私人图片、CAD、密钥和 outputs 不入库。`.gitignore` 不是完整的隐私检测器。
+本项目采用 [MIT 许可证](LICENSE)，允许使用、修改、分发和商用，须保留版权声明及许可声明。软件按原样提供，不作担保。
+
+提交前检查 `git status`、`git diff --cached`，私人图片、CAD、密钥和 outputs 不入库。`.gitignore` 不是完整的隐私检测器。用户输入的私人设计素材不因使用本 Skill 而成为本项目的开源内容。
 
 ## 测试范围
 14 项自动化测试覆盖数据格式、设计锁与输出状态等行为契约，不代表真实图像编辑质量。维护者另报告已完成实际使用测试，并观察到 CMF 迁移时的结构保持优于其未使用 Skill 的尝试；该反馈没有作为受控对比实验或量化保证。私人测试图片不随仓库分发。

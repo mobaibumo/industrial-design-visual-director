@@ -63,6 +63,6 @@ industrial-design-visual-director/
 ## 安装与版本状态
 已置于用户 Skill 发现路径并通过官方结构验证；后续已出现在当前可用 Skills 列表中，用户截图展示了明确调用后的实际图像输出。未明确调用时的自动触发稳定性没有受控测试记录。
 
-Git 本地仓库已经初始化并已创建 V1.0 初始提交。提交使用单次 `Codex <codex@localhost>` 身份，不修改全局配置。现已配置 origin 为 `https://github.com/mobaibumo/industrial-design-visual-director.git`，分支为 main。许可证待选择，当前 LICENSE 不授予开源许可。远程提交与自动化运行结果以 GitHub 实际记录为准。
+Git 本地仓库已经初始化并已创建 V1.0 初始提交。初始本地提交使用单次 `Codex <codex@localhost>` 身份，不修改全局配置。现已配置 origin 为 `https://github.com/mobaibumo/industrial-design-visual-director.git`，分支为 main。2026-10-24，经用户明确选择，采用 MIT 许可证，版权署名为 mobaibumo。远程提交与自动化运行结果以 GitHub 实际记录为准。
 
 后续 V1.1 建议：引入更严格的 JSON Schema、真实授权多图回归集、可选尺寸/蒙版校验，以及真实工具执行记录的专用导入命令。

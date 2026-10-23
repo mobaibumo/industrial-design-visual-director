@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0",
+  "product_id": "synthetic-cart",
+  "product_name": "合成四轮推车",
+  "source_assets": [
+    {
+      "id": "B",
+      "path": "synthetic/B.svg",
+      "role": "target",
+      "source": "项目自制合成示例，非真实工业产品"
+    },
+    {
+      "id": "A",
+      "path": "synthetic/A.svg",
+      "role": "cmf",
+      "source": "项目自制合成示例，非真实工业产品"
+    },
+    {
+      "id": "C",
+      "path": "synthetic/C.svg",
+      "role": "scene",
+      "source": "项目自制合成示例，非真实工业产品"
+    }
+  ],
+  "geometry_features": [
+    {
+      "id": "g1",
+      "attribute": "silhouette",
+      "value": "矩形主体",
+      "source": [
+        "B"
+      ],
+      "confidence": "Observed"
+    }
+  ],
+  "components": [
+    {
+      "id": "c1",
+      "attribute": "wheel_count",
+      "value": 4,
+      "source": [
+        "B"
+      ],
+      "confidence": "Confirmed"
+    }
+  ],
+  "cmf_features": [],
+  "visual_features": [],
+  "design_locks": [
+    {
+      "id": "L1",
+      "target": "product",
+      "attribute": "geometry",
+      "level": "Hard",
+      "expected": "保持目标主体轮廓",
+      "allowed_change": null,
+      "source": [
+        "B"
+      ],
+      "confidence": "Confirmed",
+      "severity": "critical"
+    },
+    {
+      "id": "L2",
+      "target": "wheel",
+      "attribute": "count",
+      "level": "Hard",
+      "expected": 4,
+      "allowed_change": null,
+      "source": [
+        "B"
+      ],
+      "confidence": "Confirmed",
+      "severity": "critical"
+    }
+  ],
+  "unknowns": [
+    "背面结构与实际尺寸未确认"
+  ],
+  "revision": 0
+}

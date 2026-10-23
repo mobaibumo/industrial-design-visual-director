@@ -1,0 +1,72 @@
+[
+  {
+    "id": "T01",
+    "request": "将参考图一的 CMF 迁移到目标图二",
+    "expected_mode": "cmf_transfer",
+    "expectation": "角色 A=cmf、B=target；锁结构",
+    "visual_test": "等待人工测试"
+  },
+  {
+    "id": "T02",
+    "request": "仅替换背景为真实使用场景",
+    "expected_mode": "scene_transfer",
+    "expectation": "锁产品几何 CMF 组件",
+    "visual_test": "等待人工测试"
+  },
+  {
+    "id": "T03",
+    "request": "轮眉包住轮子绝大部分，棕色轮子仅露出小部分",
+    "expected_mode": "local_edit",
+    "expectation": "只开放轮子外露面积；锁轮子数量颜色位置",
+    "visual_test": "等待人工测试"
+  },
+  {
+    "id": "T04",
+    "request": "增加两个充电口，保留杯托",
+    "expected_mode": "local_edit",
+    "expectation": "只新增两个充电口；杯托不变",
+    "visual_test": "等待人工测试"
+  },
+  {
+    "id": "T05",
+    "request": "只有 3/4 图，生成准确后视图",
+    "expected_mode": "view_consistency_review",
+    "expectation": "索取 CAD 或后视资料；概念方案非精确",
+    "visual_test": "等待人工测试"
+  },
+  {
+    "id": "T06",
+    "request": "图一材质，图二目标，图三场景",
+    "expected_mode": "cmf_transfer",
+    "expectation": "三个角色分别使用",
+    "visual_test": "等待人工测试"
+  },
+  {
+    "id": "T07",
+    "request": "修改产品 CMF，无图像编辑工具",
+    "expected_mode": "cmf_transfer",
+    "expectation": "输出未执行，QA NOT_TESTED",
+    "visual_test": "等待人工测试"
+  },
+  {
+    "id": "T08",
+    "request": "审查四轮变三轮",
+    "expected_mode": "visual_qa",
+    "expectation": "可靠证据 FAIL，遮挡 REVIEW",
+    "visual_test": "等待人工测试"
+  },
+  {
+    "id": "T09",
+    "request": "高清化，不改设计",
+    "expected_mode": "render_refinement",
+    "expectation": "保持结构，补全细节未验证",
+    "visual_test": "等待人工测试"
+  },
+  {
+    "id": "T10",
+    "request": "帮我修改这款产品的 CMF",
+    "expected_mode": "cmf_transfer",
+    "expectation": "缺少目标时不生成 DNA，仅补充输入",
+    "visual_test": "等待人工测试"
+  }
+]

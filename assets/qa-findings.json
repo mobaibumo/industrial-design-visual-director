@@ -1,0 +1,12 @@
+[
+  {
+    "dimension": "components",
+    "status": "REVIEW",
+    "lock_id": "L2",
+    "violation": false,
+    "reliable": false,
+    "evidence": "请填写实际可见证据，此模板不构成审查结果",
+    "reviewer": "待填写",
+    "correction": "补充视图"
+  }
+]

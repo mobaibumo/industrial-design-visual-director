@@ -1,0 +1,4 @@
+interface:
+  display_name: "Industrial Design Visual Director"
+  short_description: "工业设计产品视觉一致性控制：设计锁、CMF 迁移、局部编辑、场景替换与视觉审查"
+  default_prompt: "使用 $industrial-design-visual-director 分析目标产品与参考图，建立设计锁并生成编辑指令。"

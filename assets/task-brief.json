@@ -1,0 +1,29 @@
+{
+  "task_type": "cmf_transfer",
+  "target_asset": "B",
+  "reference_assets": [
+    "A"
+  ],
+  "objective": "仅迁移 A 的 CMF 到 B，保持 B 结构",
+  "allowed_changes": [
+    {
+      "target": "product",
+      "attribute": "cmf",
+      "value": "参考 A",
+      "authorization": "用户指定 A 的 CMF"
+    }
+  ],
+  "output_requirements": {
+    "aspect_ratio": "保持目标图",
+    "resolution": null
+  },
+  "uncertainty": [
+    "光照下的本色需确认"
+  ],
+  "manual_steps": [
+    "打开 B 为编辑底图",
+    "将 A 绑定为 CMF 参考",
+    "输入 edit-prompt.md",
+    "另存结果图并逐项审查"
+  ]
+}

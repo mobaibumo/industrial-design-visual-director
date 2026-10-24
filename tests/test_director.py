@@ -20,7 +20,8 @@ class DirectorTests(unittest.TestCase):
         text=(ROOT/'SKILL.md').read_text(encoding='utf-8')
         self.assertTrue(text.startswith('---\nname: industrial-design-visual-director\ndescription: '))
         refs=re.findall(r'\]\((references/[^)]+)\)',text)
-        self.assertEqual(len(refs),6)
+        self.assertIn('references/three-views.md',refs)
+        self.assertGreaterEqual(len(refs),7)
         for ref in refs:self.assertTrue((ROOT/ref).is_file(),ref)
     def test_valid_invalid_data(self):
         self.assertEqual(d.validate_dna(self.dna),[])

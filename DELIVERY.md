@@ -1,5 +1,9 @@
 # V1.0 交付与验收记录
 
+## V1.1 增量 — 2026-10-24
+
+增加 references/three-views.md、assets/three-view-brief.json、tests/test_three_views.py；更新入口、路由、提示词、审查规则及辅助脚本。支持概念三视图、正交白模统一材质、基于实际可用模型与工具的视图准备。21 项本地自动化测试通过，新增三视图测试为声明/数据契约，不是实际图像或 CAD 验证。原有 V1.0 验收记录保留如下。
+
 初始交付日期：2026-10-22。Windows 用户安装目录：`%USERPROFILE%\.codex\skills\industrial-design-visual-director`。
 
 ## 文件结构

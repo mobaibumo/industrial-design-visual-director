@@ -1,0 +1,28 @@
+{
+  "task_type": "view_consistency_review",
+  "target_asset": "B",
+  "reference_assets": ["A"],
+  "objective": "以目标产品 B 为造型依据，参考 A 的 CMF，准备正视、右视、俯视的概念三视图",
+  "allowed_changes": [
+    {"target": "image", "attribute": "view", "value": "front/right/top", "authorization": "用户要求概念三视图"},
+    {"target": "product", "attribute": "cmf", "value": "参考 A", "authorization": "用户指定 CMF 参考 A"}
+  ],
+  "output_requirements": {
+    "background": "中性纯色",
+    "view_labels": ["正视", "右视", "俯视"],
+    "disclaimer": "概念三视图，非精确设计参考；不用于工程尺寸验证",
+    "resolution": null
+  },
+  "uncertainty": ["仅有单视角资料，不可见结构需补充依据"],
+  "manual_steps": ["查看 B 与 A 并确认正面方向", "准备三视角编辑指令，CMF 只参考 A", "工具可用时另存概念结果", "逐视图核对原图与共享结构，记录未知"],
+  "view_plan": {
+    "mode": "concept_reference",
+    "accuracy": "conceptual",
+    "views": [
+      {"view": "front", "target_asset": "B", "projection": "orthographic", "unverified": ["投影为生成目标，尚未验证实际输出"]},
+      {"view": "right", "target_asset": "B", "projection": "orthographic", "unverified": ["不可见侧面结构未确认"]},
+      {"view": "top", "target_asset": "B", "projection": "orthographic", "unverified": ["顶部完整结构未确认"]}
+    ],
+    "unverified": ["未执行三视图图像生成；未完成工程几何验证"]
+  }
+}

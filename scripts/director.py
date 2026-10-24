@@ -1,10 +1,10 @@
-"""V1.0 deterministic helpers. Image interpretation belongs to Codex/human reviewers."""
+"""V1.1 deterministic helpers. Image interpretation belongs to Codex/human reviewers."""
 import argparse
 import json
 from pathlib import Path
 import re
 
-VERSION = '1.0.0'
+VERSION = '1.1.0'
 MODES = ('cmf_transfer', 'local_edit', 'scene_transfer', 'render_refinement', 'view_consistency_review', 'visual_qa')
 CONF = ('Confirmed', 'Observed', 'Inferred', 'Unknown')
 STATUSES = ('PASS', 'REVIEW', 'FAIL', 'NOT_TESTED')
@@ -67,11 +67,58 @@ def validate_dna(d):
     return errors
 
 def route(text):
-    rules = [('visual_qa', ('审查','质检','qa')), ('view_consistency_review', ('后视','多视角','正视','三视图')),
+    rules = [('visual_qa', ('审查','质检','qa')), ('view_consistency_review', ('后视','多视角','正视','侧视','俯视','三视图')),
              ('local_edit', ('局部','轮眉','充电口','增加','删除')), ('cmf_transfer', ('cmf','材质','颜色','配色')),
              ('scene_transfer', ('背景','场景')), ('render_refinement', ('高清','清晰','渲染','降噪'))]
     hits = [mode for mode, words in rules if any(word in text.lower() for word in words)]
     return hits[0] if hits else None
+
+def validate_view_plan(plan, dna):
+    """Validate declared view bindings, not CAD truth or image content."""
+    if not isinstance(plan, dict):
+        return ['view_plan must be an object']
+    errors = []
+    mode = plan.get('mode')
+    if mode not in ('concept_reference','provided_views','cad_projection'):
+        errors.append('invalid view_plan mode')
+    if plan.get('accuracy') not in ('conceptual','source_constrained'):
+        errors.append('invalid view_plan accuracy')
+    if mode == 'concept_reference' and plan.get('accuracy') != 'conceptual':
+        errors.append('single-image concept cannot claim source-constrained accuracy')
+    if not isinstance(plan.get('unverified'), list):
+        errors.append('view_plan requires unverified list')
+    views = plan.get('views')
+    if not isinstance(views, list) or len(views) != 3:
+        return errors + ['three-view plan requires exactly three views']
+    assets = {a['id']:a for a in dna['source_assets']}
+    names, targets = [], []
+    for view in views:
+        if not isinstance(view, dict):
+            errors.append('view must be an object')
+            continue
+        name, target = view.get('view'), view.get('target_asset')
+        if name not in ('front','rear','left','right','top','bottom'):
+            errors.append('invalid view direction')
+        names.append(name)
+        if not isinstance(target, str) or target not in assets:
+            errors.append('view target_asset must reference an input asset')
+        else:
+            role = assets[target]['role']
+            expected_roles = ('cad',) if mode == 'cad_projection' else ('target',)
+            if role not in expected_roles:
+                errors.append('view source role incompatible with mode')
+            targets.append(target)
+        if view.get('projection') not in ('orthographic','perspective','unknown'):
+            errors.append('invalid projection')
+        if mode == 'cad_projection' and view.get('projection') != 'orthographic':
+            errors.append('CAD three-view output requires orthographic projection')
+        if not isinstance(view.get('unverified'), list):
+            errors.append('each view requires unverified list')
+    if len(set(str(name) for name in names)) != len(names):
+        errors.append('duplicate view directions')
+    if mode == 'provided_views' and len(set(targets)) != 3:
+        errors.append('provided views require three distinct target assets')
+    return errors
 
 def validate_brief(b, dna):
     errors = []
@@ -84,8 +131,10 @@ def validate_brief(b, dna):
         errors.append('allowed_changes must be a list')
         return errors
     assets = {a['id']: a for a in dna['source_assets']}
-    if b.get('target_asset') not in assets or assets.get(b.get('target_asset'), {}).get('role') != 'target':
-        errors.append('target asset must have target role')
+    plan = b.get('view_plan')
+    target_roles = ('target','cad') if isinstance(plan,dict) and plan.get('mode') == 'cad_projection' else ('target',)
+    if b.get('target_asset') not in assets or assets.get(b.get('target_asset'), {}).get('role') not in target_roles:
+        errors.append('target asset role incompatible with task')
     if not isinstance(b.get('reference_assets'), list) or not set(b.get('reference_assets', [])) <= set(assets):
         errors.append('invalid reference assets')
     for lock in dna['design_locks']:
@@ -94,6 +143,8 @@ def validate_brief(b, dna):
                 errors.append('allowed change conflicts with Hard lock ' + lock['id'])
             if lock['level'] == 'Conditional' and not any(change.get('authorization') for change in b['allowed_changes'] if change.get('target') == lock['target'] and change.get('attribute') == lock['attribute']):
                 errors.append('Conditional change requires authorization')
+    if 'view_plan' in b:
+        errors += validate_view_plan(b['view_plan'], dna)
     return errors
 
 def prompt(dna, brief):
@@ -105,7 +156,7 @@ def prompt(dna, brief):
         'Preserve': [l for l in dna['design_locks'] if l['level'] == 'Hard' or (l['level'] == 'Conditional' and not any(c.get('target') == l['target'] and c.get('attribute') == l['attribute'] and c.get('authorization') for c in brief['allowed_changes']))],
         'Allowed Changes': brief['allowed_changes'],
         'Forbidden Changes': ['禁止跨角色迁移造型；未授权属性保持原样；禁止补造不可见结构。'],
-        'Output Requirements': brief['output_requirements'],
+        'Output Requirements': ({'requirements':brief['output_requirements'], 'view_plan':brief['view_plan']} if 'view_plan' in brief else brief['output_requirements']),
         'Uncertainty': dna['unknowns'] + brief['uncertainty'],
     }
     return '\n\n'.join('## ' + key + '\n' + json.dumps(value, ensure_ascii=False, indent=2) for key, value in sections.items())
@@ -155,6 +206,11 @@ def prepare(dna, brief, out):
                 'tools_used':['Python standard library: prepare'], 'actual_image_edit':False,
                 'files':['product-dna.json','design-brief.md','edit-prompt.md','change-log.md','run-manifest.json'],
                 'qa_status':'NOT_TESTED','execution_status':'PROMPT_READY','unverified':dna['unknowns']+['真实图像编辑和视觉审查尚未执行']}
+    if 'view_plan' in brief:
+        manifest['view_plan'] = brief['view_plan']
+        manifest['unverified'] += brief['view_plan']['unverified']
+        for view in brief['view_plan']['views']:
+            manifest['unverified'] += view['unverified']
     save('run-manifest.json',manifest)
     return manifest
 
